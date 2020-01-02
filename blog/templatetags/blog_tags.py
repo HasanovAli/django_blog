@@ -27,4 +27,6 @@ def get_most_commented_posts(count=5):
 
 @register.filter(name='markdown')
 def markdown_format(text):
+    # By default, Django does not trust any HTML that comes from existing context or filters.
+    # We use mark_safe to say that this markdown(html) is safety.
     return mark_safe(markdown.markdown(text))
