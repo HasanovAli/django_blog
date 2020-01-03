@@ -7,6 +7,11 @@
     <link href="{% static 'css/blog.css' %}" rel="stylesheet">
 </head>
 <body>
+    <div>
+        <a class="active" href="{% url 'blog:post_list' %}">Home</a> |
+        <a href="{% url 'blog:contacts' %}">Contacts</a> |
+        <a href="{% url 'blog:post_search' %}">Search for post</a> |
+    </div>
     <div id="content">
         {% block content %}{% endblock %}
     </div>

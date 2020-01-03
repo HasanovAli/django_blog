@@ -1,0 +1,12 @@
+{% extends "blog/base.html" %}
+
+{% block title %}Contacts{% endblock %}
+
+{% block content %}
+    <h1>Contacts</h1>
+    <h3>For feedback and queries: {{ email }}</h3>
+    <h3>Also You can contuct us with social networks:</h3>
+    <a href="{{ telegram }}">- Telegram</a>
+    <br>
+    <a href="{{ inst }}"> - Instagram</a>
+{% endblock %}

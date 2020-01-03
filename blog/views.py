@@ -1,12 +1,17 @@
 from django.db.models import Count
 from django.core.mail import send_mail
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import ListView
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from .forms import EmailPostForm, CommentForm, SearchForm
-from .models import Post, Comment
+from .models import Post
 from taggit.models import Tag
+from secret import ContactsConfig
+
+
+class MethodNotAllowed(Exception):
+    def __init__(self, msg):
+        self.msg = msg
 
 
 def post_list(request, tag_slug=None):
@@ -26,13 +31,6 @@ def post_list(request, tag_slug=None):
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
     return render(request, 'blog/post/list.html', {'page': page, 'posts': posts, 'tag': tag})
-
-
-# class PostListView(ListView):
-#     queryset = Post.published.all()
-#     context_object_name = 'posts'
-#     paginate_by = 3
-#     template_name = 'blog/post/list.html'
 
 
 def post_detail(request, year, month, day, post):
@@ -102,3 +100,13 @@ def post_search(request):
             results = Post.objects.annotate(search=search_vector, rank=SearchRank(search_vector, search_query)).\
                 filter(rank__gte=0.15).order_by('-rank')
     return render(request, 'blog/post/search.html', {'form': form, 'query': query, 'results': results})
+
+
+def get_contacts(request):
+    if request.method == 'GET':
+        inst = ContactsConfig.inst
+        email = ContactsConfig.email
+        telegram = ContactsConfig.telegram
+    else:
+        raise (MethodNotAllowed(f'{request.method} IS NOT ALLOWED'))
+    return render(request, 'blog/contacts.html', {'inst': inst, 'email': email, 'telegram': telegram})
